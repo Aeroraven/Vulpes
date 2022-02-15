@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Vulpes.Render.Material;
 
 namespace Vulpes.Render.Attribute
 {
-    interface IVuShape:IVuSignedDistanceField,IVuComponent,IVuMaterialHost
+    interface IVuMaterialHost
     {
+        public abstract VuLightMaterial GetLightMaterial();
     }
 }

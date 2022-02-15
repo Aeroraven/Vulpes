@@ -4,39 +4,40 @@ using System.Text;
 using Vulpes.Core.Exceptions;
 namespace Vulpes.Core.Base
 {
-    class VuVector2f:VuVector<float>
+    class VuVector2f
     {
-        public VuVector2f() : base(2) { }
-        public VuVector2f(float x,float y):base(2)
+        float _x, _y;
+        public VuVector2f() { }
+        public VuVector2f(float x,float y)
         {
-            this[0] = x;
-            this[1] = y;
+           X = x;
+           Y = y;
         }
-        public VuVector2f(VuVector2f value) : base(2)
+        public VuVector2f(VuVector2f value) 
         {
-            this[0] = value[0];
-            this[1] = value[1];
+            X = value.X;
+            Y = value.Y;
         }
         public float X
         {
             get
             {
-                return this[0];
+                return _x;
             }
             set
             {
-                this[0] = value;
+                _x = value;
             }
         }
         public float Y
         {
             get
             {
-                return this[1];
+                return _y;
             }
             set
             {
-                this[1] = value;
+                _y = value;
             }
         }
         public float Dist
@@ -55,29 +56,14 @@ namespace Vulpes.Core.Base
         }
         public static VuVector2f operator +(VuVector2f lhs, VuVector2f rhs)
         {
-            if (lhs.Size != rhs.Size)
-            {
-                throw new VuMathematicalException("Added vectors should have same dimensions");
-            }
-            
             return new VuVector2f(lhs.X+rhs.X,lhs.Y+rhs.Y);
         }
         public static VuVector2f operator -(VuVector2f lhs, VuVector2f rhs)
         {
-            if (lhs.Size != rhs.Size)
-            {
-                throw new VuMathematicalException("Added vectors should have same dimensions");
-            }
-
             return new VuVector2f(lhs.X - rhs.X, lhs.Y - rhs.Y);
         }
         public static VuVector2f operator *(VuVector2f lhs, VuVector2f rhs)
         {
-            if (lhs.Size != rhs.Size)
-            {
-                throw new VuMathematicalException("Added vectors should have same dimensions");
-            }
-
             return new VuVector2f(lhs.X * rhs.X, lhs.Y * rhs.Y);
         }
         public static VuVector2f operator *(float lhs, VuVector2f rhs)

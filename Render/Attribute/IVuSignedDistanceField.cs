@@ -7,5 +7,6 @@ namespace Vulpes.Render.Attribute
     interface IVuSignedDistanceField
     {
         abstract public float GetSDFDistance(VuVector2f source);
+        abstract public float GetSDFDistance(float sourceX,float sourceY);
     }
 }

@@ -6,6 +6,7 @@ using Vulpes.Core.Base;
 using Vulpes.Core.Mathematics;
 using Vulpes.Render.Attribute;
 using Vulpes.Render.Algorithm;
+using Vulpes.Core.Image;
 
 namespace Vulpes.Render.Component
 {
@@ -27,24 +28,32 @@ namespace Vulpes.Render.Component
         {
             shapes.Remove(name);
         }
-        private VuColor RayMarching(VuVector2f source,VuVector2f direction)
+        private void RayMarching(VuVector2f source,VuLightRay light,ref float sR,ref float sG,ref float sB)
         {
             float t = 0.0f;
             for(int i=0;i<renderConfig.MaxStep && t < renderConfig.MaxLength; i++)
             {
-                float sr = shapes["debug"].GetSDFDistance(source + t * direction.UnitVector);
+                float sr = 1e30f;
+                string mark = "";
+                foreach(var j in shapes)
+                {
+                    float dst = j.Value.GetSDFDistance(source.X+t*light.Direction.X,source.Y+t*light.Direction.Y);
+                    if (dst < sr)
+                    {
+                        sr = dst;
+                        mark = j.Key;
+                    }
+                }
                 if (sr < VuMathBase.Eps)
                 {
-                    return new VuColor(255, 255, 255);
+                    light.Color.MixColorRM(shapes[mark].GetLightMaterial().Emission,ref sR,ref sG,ref sB);
+                    return;
                 }
                 t += sr;
             }
-            return new VuColor(0, 0, 0);
         }
         public void Render(int samples)
         {
-            
-            
             for (int i = 0; i < image.Width; i++)
             {
                 for (int j = 0; j < image.Height; j++)
@@ -57,10 +66,7 @@ namespace Vulpes.Render.Component
                         VuVector2f dir = VuRandomUtil.RandomUnitVector();
                         VuColor color = new VuColor(255, 255, 255);
                         VuLightRay light = new VuLightRay(new VuVector2f(samplex, sampley), dir, color);
-                        VuColor res = RayMarching(new VuVector2f(samplex, sampley), dir);
-                        sR += res.R;
-                        sB += res.B;
-                        sG += res.G;
+                        RayMarching(new VuVector2f(samplex, sampley), light,ref sR,ref sG,ref sB);
                     }
                     sR /= samples;
                     sB /= samples;
@@ -79,6 +85,10 @@ namespace Vulpes.Render.Component
         public void Save(string path)
         {
             base.image.Save(path);
+        }
+        public VuBitmapBuffer GetImage()
+        {
+            return image;
         }
     }
 }

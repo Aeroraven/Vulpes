@@ -6,95 +6,98 @@ using Vulpes.Core.Exceptions;
 
 namespace Vulpes.Core.Base
 {
-    class VuColor : VuVector<byte>
+    class VuColor 
     {
-        public VuColor() : base(4) {
-            this[0] = 0;
-            this[1] = 0;
-            this[2] = 0;
-            this[3] = 255;
+        byte _r, _g, _b, _a;
+        public VuColor() {
+            R = 0;
+            G = 0;
+            B = 0;
+            A = 255;
         }
-        public VuColor(byte r, byte g, byte b) : base(4)
+        public VuColor(byte r, byte g, byte b)
         {
-            this[0] = r;
-            this[1] = g;
-            this[2] = b;
-            this[3] = 255;
+            R = r;
+            G = g;
+            B = b;
+            A = 255;
         }
-        public VuColor(byte r, byte g, byte b, byte a) : base(4)
+        public VuColor(byte r, byte g, byte b, byte a)
         {
-            this[0] = r;
-            this[1] = g;
-            this[2] = b;
-            this[3] = a;
+            R = r;
+            G = g;
+            B = b;
+            A = a;
         }
-        public VuColor(VuColor c) : base(4)
+        public VuColor(VuColor c) 
         {
-            for (int i = 0; i < 4; i++)
-            {
-                this[i] = c[i];
-            }
-        }
-        public VuColor(VuVector<byte> c) : base(4)
-        {
-            if (c.Size != 4)
-            {
-                throw new VuMathematicalException("Color vector must be a 4d vector");
-            }
-            for (int i = 0; i < 4; i++)
-            {
-                this[i] = c[i];
-            }
+            SetColor(c);
         }
         public void SetColor(VuColor c)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                this[i] = c[i];
-            }
+            R = c.R;
+            G = c.G;
+            B = c.B;
+            A = c.A;
+        }
+        public VuColor MixColor(VuColor c)
+        {
+            VuColor ret = new VuColor();
+            ret.R = (byte)(c.R * R / 255);
+            ret.G = (byte)(c.G * G / 255);
+            ret.B = (byte)(c.B * B / 255);
+            ret.A = (byte)(c.A * A / 255);
+            return ret;
+        }
+        public void MixColorRM(VuColor c,ref float sR,ref float sG,ref float sB)
+        {
+            VuColor ret = new VuColor();
+            sR += (byte)(c.R * R / 255);
+            sG += (byte)(c.G * G / 255);
+            sB += (byte)(c.B * B / 255);
         }
         public byte R
         {
             get
             {
-                return this[0];
+                return _r;
             }
             set
             {
-                this[0] = value;
+                _r = value;
             }
         }
         public byte G
         {
             get
             {
-                return this[1];
+                return _g;
             }
             set
             {
-                this[1] = value;
+                _g = value;
             }
         }
         public byte B
         {
             get
             {
-                return this[2];
+                return _b;
             }
             set
             {
-                this[2] = value;
+                _b = value;
             }
         }
         public byte A
         {
             get
             {
-                return this[3];
+                return _a;
             }
             set
             {
-                this[3] = value;
+                _a = value;
             }
         }
     }
